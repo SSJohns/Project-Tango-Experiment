@@ -49,10 +49,7 @@ Font2D :: Font2D(string fontName, bool ca) {
 
 Texture* Font2D :: getChar(char c) {
 	if(isalpha(c)) {
-		if(!isCaseEnabled)
-			return fontMap[tolower(c)];
-		else
-			return fontMap[c];
+		return fontMap[c];
 	}
 	else// if(isdigit(c))
 		return fontMap[c];

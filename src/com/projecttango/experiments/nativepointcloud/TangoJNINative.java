@@ -46,12 +46,6 @@ public class TangoJNINative {
 
   public static native void setCamera(int cameraIndex);
   
-  public static native String getEventString();
-  
-  public static native int getVerticesCount();
-  
-  public static native float getAverageZ();
-  
   public static native float startSetCameraOffset();
   
   public static native float setCameraOffset(float rotX, float rotY, float zDistance);

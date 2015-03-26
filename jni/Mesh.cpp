@@ -110,6 +110,15 @@ void Mesh :: addPoints(float* depthBuffer, int depthBufferSize, const glm::mat4 
 	isAdding = false;
 }
 
+int Mesh :: getPointNumber() {
+	int number = 0;
+
+	for(int i = 0; i < numClouds; i++)
+		number += pointArraySize[i];
+
+	return number;
+}
+
 
 void Mesh :: Render(glm::mat4 projection_mat, glm::mat4 view_mat) {
 	//isDrawing = true;

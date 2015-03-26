@@ -39,13 +39,8 @@ import android.widget.Toast;
 public class PointcloudActivity extends Activity implements OnClickListener {
   public static final String EXTRA_KEY_PERMISSIONTYPE = "PERMISSIONTYPE";
   public static final String EXTRA_VALUE_MOTION_TRACKING = "MOTION_TRACKING_PERMISSION";
-  private final int kTextUpdateIntervalms = 100;
 
   private GLSurfaceView mGLView;
-
-  private TextView mTangoEventTextView;
-  private TextView mPointCountTextView;
-  private TextView mAverageZTextView;
 
   private boolean mIsPermissionIntentCalled = false;
 
@@ -69,24 +64,9 @@ public class PointcloudActivity extends Activity implements OnClickListener {
 
     setContentView(R.layout.activity_pointcloud);
 
-    // Text views for the available points count.
-    mPointCountTextView = (TextView) findViewById(R.id.pointCount);
-
-    // Text view for average depth distance (in meters). 
-    mAverageZTextView = (TextView) findViewById(R.id.averageZ);
-
-    // Text views for displaying most recent Tango Event.
-    mTangoEventTextView = (TextView) findViewById(R.id.tangoevent);
-
 
     // Text views for application versions.
-    PackageInfo pInfo;
-    try {
-      pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
-    } catch (NameNotFoundException e) {
-      e.printStackTrace();
-    }
-
+    
     // Buttons for selecting camera view and Set up button click listeners.
     findViewById(R.id.first_person_button).setOnClickListener(this);
     findViewById(R.id.third_person_button).setOnClickListener(this);
@@ -95,8 +75,6 @@ public class PointcloudActivity extends Activity implements OnClickListener {
     // OpenGL view where all of the graphics are drawn.
     mGLView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
     mGLView.setRenderer(new Renderer());
-
-    startUIThread();
   }
 
   @Override
@@ -242,32 +220,5 @@ public class PointcloudActivity extends Activity implements OnClickListener {
       }
     }
     return true;
-  }
-
-  private void startUIThread() {
-    new Thread(new Runnable() {
-      @Override
-        public void run() {
-          while (true) {
-            try {
-              Thread.sleep(kTextUpdateIntervalms);
-              runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    mTangoEventTextView.setText(TangoJNINative.getEventString());
-                    mPointCountTextView.setText(String.valueOf(TangoJNINative.getVerticesCount()));
-                    mAverageZTextView.setText(String.format("%.3f", TangoJNINative.getAverageZ()));
-                  } catch (Exception e) {
-                      e.printStackTrace();
-                  }
-                }
-              });
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
-          }
-        }
-    }).start();
   }
 }

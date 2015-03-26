@@ -36,6 +36,9 @@
 using namespace std;
 
 
+long long totalPointNumber = 0;
+
+
 
 bool glCreated = false;
 
@@ -281,6 +284,8 @@ bool RenderFrame() {
 
   //Only Update if the Cloud is New!
   if(TangoData::GetInstance().hasNewCloud) {
+	  totalPointNumber += TangoData::GetInstance().depth_buffer_size;
+
 	  mesh->addPoints(TangoData::GetInstance().depth_buffer,TangoData::GetInstance().depth_buffer_size*3, oc_2_ow_mat_depth);
 	  TangoData::GetInstance().hasNewCloud = false;
   }
@@ -294,9 +299,20 @@ bool RenderFrame() {
   gl->setFont("8bit");
 
   float dY = 0;
-  gl->drawString(0,dY,"FPS: " + to_string(TangoData::GetInstance().depth_frame_delta_time));	dY += 12;
-  gl->drawString(0,dY,"Camera Distance: " + to_string(cam_cur_dist));	dY += 12;
-  gl->drawString(0,dY,TangoData::GetInstance().pose_string);			dY += 12;
+  gl->drawString(0,dY,"Frame Delta Time (ms): " + to_string(TangoData::GetInstance().depth_frame_delta_time));
+  	  dY += 12;
+  gl->drawString(0,dY,"Camera Distance: " + to_string(cam_cur_dist));
+  	  dY += 12;
+  gl->drawString(0,dY,"Point Number: " + to_string(mesh->getPointNumber()));
+  	  dY += 12;
+  gl->drawString(0,dY,to_string(totalPointNumber*3.*4/1024/1024) + "MB");
+  gl->drawString(0,dY,"Average Depth (m): " + to_string(TangoData::GetInstance().depth_average_length));
+  	  	  dY += 12;
+  gl->drawString(0,dY,TangoData::GetInstance().pose_string);
+  	  dY += 12;
+  gl->drawString(0,dY,TangoData::GetInstance().event_string);
+  	  	  dY += 12;
+
 
   return true;
 }
@@ -429,39 +445,6 @@ Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getPoseString(
   return (env)->NewStringUTF(ret_string.c_str());
 }*/
 
-JNIEXPORT jstring JNICALL
-Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getEventString(
-    JNIEnv* env, jobject) {
-  pthread_mutex_lock(&TangoData::GetInstance().event_mutex);
-  std::string ret_string = TangoData::GetInstance().event_string;
-  pthread_mutex_unlock(&TangoData::GetInstance().event_mutex);
-  return (env)->NewStringUTF(ret_string.c_str());
-}
-
-JNIEXPORT jstring JNICALL
-Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getVersionNumber(
-    JNIEnv* env, jobject) {
-  return (env)
-      ->NewStringUTF(TangoData::GetInstance().lib_version_string.c_str());
-}
-
-JNIEXPORT jint JNICALL
-Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getVerticesCount(
-    JNIEnv*, jobject) {
-  pthread_mutex_lock(&TangoData::GetInstance().xyzij_mutex);
-  int ret_val = TangoData::GetInstance().depth_buffer_size;
-  pthread_mutex_unlock(&TangoData::GetInstance().xyzij_mutex);
-  return ret_val;
-}
-
-JNIEXPORT float JNICALL
-Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getAverageZ(
-    JNIEnv*, jobject) {
-  pthread_mutex_lock(&TangoData::GetInstance().xyzij_mutex);
-  float ret_val = TangoData::GetInstance().depth_average_length;
-  pthread_mutex_unlock(&TangoData::GetInstance().xyzij_mutex);
-  return ret_val;
-}
 
 
 // Touching GL interface.

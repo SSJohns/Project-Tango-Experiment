@@ -55,11 +55,6 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tangoevent" />
-
-            <TextView
                 android:id="@+id/tangoevent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -69,11 +64,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start2device" />
 
         </LinearLayout>
         
@@ -90,11 +80,6 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/averageZ" />
-
-            <TextView
                 android:id="@+id/averageZ"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -106,11 +91,6 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pointCount" />
-
-            <TextView
                 android:id="@+id/pointCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -120,11 +100,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/frameDelta" />
 
             <TextView
                 android:id="@+id/frameDelta"
