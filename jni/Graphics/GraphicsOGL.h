@@ -122,4 +122,5 @@ class GraphicsOGL {
 		static Texture* tst;
 };
 
+
 #endif

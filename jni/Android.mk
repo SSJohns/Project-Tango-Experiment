@@ -45,6 +45,7 @@ LOCAL_SRC_FILES := jni/tango_data.cpp \
 				   jni/Graphics/Font.cpp \
 				   jni/Graphics/FontController.cpp \
 				   jni/Graphics/Texture.cpp \
+  				   jni/Functions.cpp \
                    tango-gl-renderer/camera.cpp \
                    tango-gl-renderer/gl_util.cpp \
                    tango-gl-renderer/grid.cpp \

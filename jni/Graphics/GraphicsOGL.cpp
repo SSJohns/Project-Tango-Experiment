@@ -7,6 +7,7 @@
 #include <chrono>
 #include <cctype>
 #include <iostream>
+#include <string>
 #include "../tango_data.h"
 #include "Texture.h"
 #include "Image.h"
@@ -14,6 +15,7 @@
 #include "GraphicsOGL.h"
 //#include "Shader.h"
 #include "Font.h"
+#include <sstream>
 //#include "../IO/InputController.h"
 //#include "ShaderController.h"
 //#include "../Primitives/Drawable.h"
@@ -22,6 +24,7 @@
 //#include "../Functions/Math2D.h"
 #include <ctime>
 #include <cmath>
+#include "../Functions.h"
 //#include "../Environment/Heightmap.h"
 //#include "../Characters/Player.h"
 using namespace std;
@@ -30,6 +33,13 @@ using namespace std::chrono;
 
 float ttime = 0;
 
+float calcLenX(float len, float dir) {
+	return len*cos(dir);
+}
+
+float calcLenY(float len, float dir) {
+	return len*sin(dir);
+}
 
 
 static const char kVertexShader[] =
@@ -315,24 +325,63 @@ void GraphicsOGL :: display() {
 					glVertex3f(x + r*xN, y + r*yN, depth);
 			}
 		glEnd();
-	}
+	}*/
 
 	void GraphicsOGL :: fillPolygon(float x, float y, float r, int vertNum, float angle) {
-		float depth = 0, dir, xN, yN;
-	
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f(.5,.5);
-				glVertex3f(x, y, depth);
-			for(float i = 0; i < vertNum+1; i++) {
-				dir = angle + i/vertNum*360;
-				xN = calcLenX(1,dir);
-				yN = -calcLenY(1,dir);
-	
-				glTexCoord2f(xN,yN);
-					glVertex3f(x + r*xN, y + r*yN, depth);
-			}
-		glEnd();
-	}*/
+
+
+		y += 152;
+
+
+		int numPts = vertNum+2;
+		float dir, xN, yN, vX, vY;
+
+		GLfloat vVertices[numPts*3];
+		GLfloat tCoords[numPts*2];
+
+		tCoords[0] = .5; tCoords[1] = .5;
+		vVertices[0] = x; vVertices[1] = y; vVertices[2] = 0;
+		for(int i = 0; i < vertNum+1; i++) {
+			dir = angle + 1.*i/vertNum*360;
+			xN = calcLenX(1,dir);
+			yN = -calcLenY(1,dir);
+
+			tCoords[2 + 2*i] = xN;
+			tCoords[2 + 2*i + 1] = yN;
+
+			vVertices[3 + 3*i] = x + r*xN;
+			vVertices[3 + 3*i + 1] = y + r*yN;
+			vVertices[3 + 3*i + 2] = 0;
+		}
+
+		for(int i = 0; i < numPts*3; i += 3) {
+			drawString(1300,400+i/3*12,to_string(vVertices[i]) + ", " + to_string(vVertices[i+1]) + ", " + to_string(vVertices[i+2]));
+
+			vVertices[i] = (vVertices[i]/1920.*2 - 1.);
+			vVertices[i+1] = -(vVertices[i+1]/1200.*2 - 1.);
+		}
+
+
+		glUseProgram(shader_program_);
+
+		// Apply Projection Matrix
+
+
+		// Set Drawing Color
+		glUniform4fv(uniform_color_, 1, glm::value_ptr(drawColor));
+		glUniformMatrix4fv(uniform_mvp_mat_, 1, GL_FALSE, glm::value_ptr(mvp_mat));
+
+		// Bind vertex buffer.
+		glVertexAttribPointer(attrib_vertices_, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+		glEnableVertexAttribArray(attrib_vertices_);
+		glVertexAttribPointer(attrib_texcoords_, 2, GL_FLOAT, GL_FALSE, 0, tCoords);
+		glEnableVertexAttribArray(attrib_texcoords_);
+
+
+		glDrawArrays(GL_POINTS, 0, numPts);
+
+		glUseProgram(0);
+	}
 
 	void GraphicsOGL :: drawTexture(float x, float y, Texture* tex) {
 		
@@ -533,6 +582,9 @@ void GraphicsOGL :: display() {
 
 	float GraphicsOGL :: drawCharScaled(float x, float y, float xS, float yS, char c) {
 		Texture* t = curFont->getChar(c);
+
+		if(c == 'g' || c == 'p' || c == 'q' || c == 'j' || c == 'y')
+			y += yS*t->getHeight()*.25;
 
 		drawTextureScaled(x, y, xS, yS, t);
 		return t->getWidth()*xS;

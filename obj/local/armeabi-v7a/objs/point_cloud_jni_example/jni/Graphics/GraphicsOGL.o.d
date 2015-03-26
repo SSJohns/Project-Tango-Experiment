@@ -161,7 +161,8 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/GraphicsOGL.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Font.h \
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/map \
- C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/FontController.h
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/FontController.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../Functions.h
 
 C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/unistd.h:
 
@@ -486,3 +487,5 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Fon
 C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/map:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/FontController.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../Functions.h:

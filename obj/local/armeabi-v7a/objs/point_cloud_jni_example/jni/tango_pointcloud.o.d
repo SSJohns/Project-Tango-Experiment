@@ -116,6 +116,7 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/gl_util.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/grid.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/transform.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Functions.h \
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/sstream \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/pointcloud.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_data.h \
@@ -376,6 +377,8 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-ren
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/grid.h:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/transform.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Functions.h:
 
 C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/sstream:
 
