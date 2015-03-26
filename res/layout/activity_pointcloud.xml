@@ -38,11 +38,6 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/serviceversion" />
-
-            <TextView
                 android:id="@+id/version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -52,17 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/appversion" />
-
-            <TextView
-                android:id="@+id/appversion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1.0" />
         </LinearLayout>
         
            <LinearLayout
@@ -97,13 +81,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-			
-            <TextView
-                android:id="@+id/pose_data_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:text="@string/status" />
 			 
         </LinearLayout>
         

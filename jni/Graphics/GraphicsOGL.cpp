@@ -546,7 +546,7 @@ void GraphicsOGL :: display() {
 		int len = str.length();
 		char c;
 
-		float s = 8;
+		float s = 8, e = -1*xS;
 
 		float dX = x, dY = y;
 
@@ -558,11 +558,11 @@ void GraphicsOGL :: display() {
 				dX = x;
 			}
 			else if(c == ' ')
-				dX += s*xS + 1;
+				dX += s*xS + e;
 			else if(islower(c))
-				dX += drawCharScaled(dX,dY + (s*yS*.25), xS,yS*.75, c) + 1;
+				dX += drawCharScaled(dX,dY + (s*yS*.25), xS,yS*.75, c) + e;
 			else
-				dX += drawCharScaled(dX,dY, xS, yS, c) + 1;
+				dX += drawCharScaled(dX,dY, xS, yS, c) + e;
 		}
 	}
 

@@ -26,20 +26,25 @@ Font2D :: Font2D(string fontName, bool ca) {
 	//	__android_log_print(ANDROID_LOG_INFO, "Junk", "%s", cwd.c_str());
 
 
-	if(!isCaseEnabled) {
-		for(int i = 0; i < 26; i++)
-			addChar('a' + i);
-		for(int i = 0; i < 10; i++)
-			addChar('0' + i);
-
-		addChar(',');
-		addChar('!');
-		addChar('?');
-		addChar('.');
-		addChar(';');
-		addChar(':');
-		addChar('-');
+	for(int i = 0; i < 26; i++) {
+		addChar('a' + i);
+		addChar('A' + i);
 	}
+
+	for(int i = 0; i < 10; i++)
+		addChar('0' + i);
+
+	addChar(',');
+	addChar('!');
+	addChar('?');
+	addChar('.');
+	addChar(';');
+	addChar(':');
+	addChar('-');
+	addChar('(');
+	addChar(')');
+	addChar('[');
+	addChar(']');
 }
 
 Texture* Font2D :: getChar(char c) {

@@ -43,13 +43,9 @@ public class PointcloudActivity extends Activity implements OnClickListener {
 
   private GLSurfaceView mGLView;
 
-  private TextView mPoseDataTextView;
   private TextView mTangoEventTextView;
   private TextView mPointCountTextView;
-  private TextView mVersionTextView;
   private TextView mAverageZTextView;
-  private TextView mFrameDeltaTimeTextView;
-  private TextView mAppVersion;
 
   private boolean mIsPermissionIntentCalled = false;
 
@@ -73,30 +69,20 @@ public class PointcloudActivity extends Activity implements OnClickListener {
 
     setContentView(R.layout.activity_pointcloud);
 
-    // Text views for the status of the pose data and Tango library version.
-    mVersionTextView = (TextView) findViewById(R.id.version);
-
     // Text views for the available points count.
     mPointCountTextView = (TextView) findViewById(R.id.pointCount);
 
     // Text view for average depth distance (in meters). 
     mAverageZTextView = (TextView) findViewById(R.id.averageZ);
 
-    // Text view for fram delta time between two depth frame.
-    mFrameDeltaTimeTextView = (TextView) findViewById(R.id.frameDelta);
-
     // Text views for displaying most recent Tango Event.
     mTangoEventTextView = (TextView) findViewById(R.id.tangoevent);
 
-    // Text views for displaying translation and rotation data.
-    mPoseDataTextView = (TextView) findViewById(R.id.pose_data_textview);
 
     // Text views for application versions.
-    mAppVersion = (TextView) findViewById(R.id.appversion);
     PackageInfo pInfo;
     try {
       pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
-      mAppVersion.setText(pInfo.versionName);
     } catch (NameNotFoundException e) {
       e.printStackTrace();
     }
@@ -186,8 +172,6 @@ public class PointcloudActivity extends Activity implements OnClickListener {
           // Set up Tango configuration with auto-reset on.
           TangoJNINative.setupConfig();
 
-          // Set Tango Service's version number.
-          mVersionTextView.setText(TangoJNINative.getVersionNumber());
 
           // Connect Tango Service
           err =  TangoJNINative.connect();
@@ -272,11 +256,8 @@ public class PointcloudActivity extends Activity implements OnClickListener {
                 public void run() {
                   try {
                     mTangoEventTextView.setText(TangoJNINative.getEventString());
-                    mPoseDataTextView.setText(TangoJNINative.getPoseString());
                     mPointCountTextView.setText(String.valueOf(TangoJNINative.getVerticesCount()));
                     mAverageZTextView.setText(String.format("%.3f", TangoJNINative.getAverageZ()));
-                    mFrameDeltaTimeTextView.setText(
-                        String.format("%.3f", TangoJNINative.getFrameDeltaTime()));
                   } catch (Exception e) {
                       e.printStackTrace();
                   }

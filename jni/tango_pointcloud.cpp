@@ -293,7 +293,10 @@ bool RenderFrame() {
   gl->setColor(0,0,0,1);
   gl->setFont("8bit");
 
-  gl->drawStringScaled(0,0,2,2,"Camera Distance: " + to_string(cam_cur_dist));
+  float dY = 0;
+  gl->drawString(0,dY,"FPS: " + to_string(TangoData::GetInstance().depth_frame_delta_time));	dY += 12;
+  gl->drawString(0,dY,"Camera Distance: " + to_string(cam_cur_dist));	dY += 12;
+  gl->drawString(0,dY,TangoData::GetInstance().pose_string);			dY += 12;
 
   return true;
 }
@@ -417,14 +420,14 @@ Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_setCamera(
 }
 
 // Tango data interfaces.
-JNIEXPORT jstring JNICALL
+/*JNIEXPORT jstring JNICALL
 Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getPoseString(
     JNIEnv* env, jobject) {
   pthread_mutex_lock(&TangoData::GetInstance().pose_mutex);
   std::string ret_string = TangoData::GetInstance().pose_string;
   pthread_mutex_unlock(&TangoData::GetInstance().pose_mutex);
   return (env)->NewStringUTF(ret_string.c_str());
-}
+}*/
 
 JNIEXPORT jstring JNICALL
 Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getEventString(
@@ -460,14 +463,6 @@ Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getAverageZ(
   return ret_val;
 }
 
-JNIEXPORT float JNICALL
-Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getFrameDeltaTime(
-    JNIEnv*, jobject) {
-  pthread_mutex_lock(&TangoData::GetInstance().xyzij_mutex);
-  float ret_val = TangoData::GetInstance().depth_frame_delta_time;
-  pthread_mutex_unlock(&TangoData::GetInstance().xyzij_mutex);
-  return ret_val;
-}
 
 // Touching GL interface.
 JNIEXPORT void JNICALL
