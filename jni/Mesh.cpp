@@ -33,7 +33,7 @@ Mesh :: Mesh(int maxPoints) : Renderable() {
 
 
 	curCloud = 0;
-	numClouds = 1;
+	numClouds = 50;
 	resScale = 1;
 
 

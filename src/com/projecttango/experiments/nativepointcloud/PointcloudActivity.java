@@ -171,6 +171,8 @@ public class PointcloudActivity extends Activity implements OnClickListener {
       case MotionEvent.ACTION_DOWN: {
         TangoJNINative.startSetCameraOffset();
         mTouchCurrentDist = 0.0f;
+        
+        TangoJNINative.passTouchPos(event.getX(0),event.getY(0));
         mTouchStartPositionition[0] = event.getX(0);
         mTouchStartPositionition[1] = event.getY(0);
         break;
@@ -179,6 +181,9 @@ public class PointcloudActivity extends Activity implements OnClickListener {
         mTouchCurrentPosition[0] = event.getX(0);
         mTouchCurrentPosition[1] = event.getY(0);
 
+        
+        TangoJNINative.passTouchPos(event.getX(0),event.getY(0));
+        
         // Normalize to screen width.
         float normalizedRotX = (mTouchCurrentPosition[0] - mTouchStartPositionition[0])
             / mScreenSize.x;
@@ -197,6 +202,7 @@ public class PointcloudActivity extends Activity implements OnClickListener {
         TangoJNINative.startSetCameraOffset();
         float absX = event.getX(0) - event.getX(1);
         float absY = event.getY(0) - event.getY(1);
+        
         mTouchStartDist = (float) Math.sqrt(absX * absX + absY * absY);
         break;
       }

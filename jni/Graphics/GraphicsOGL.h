@@ -112,6 +112,7 @@ class GraphicsOGL {
 			GLuint curProgram;
 			float* resolution;
 			float globalTime;
+			int isTextureEnabled;
 
 		//Font Variables
 			FontController* fontController;

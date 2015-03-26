@@ -34,11 +34,11 @@ using namespace std::chrono;
 float ttime = 0;
 
 float calcLenX(float len, float dir) {
-	return len*cos(dir);
+	return len*cos(dir/180.*3.14159);
 }
 
 float calcLenY(float len, float dir) {
-	return len*sin(dir);
+	return len*sin(dir/180.*3.14159);
 }
 
 
@@ -62,10 +62,14 @@ static const char kVertexShader[] =
 
 static const char kFragmentShader[] =
 	"uniform sampler2D tex;\n"
+	"uniform int iTexOn;\n"
 	"varying vec4 pColor;\n"
 	"varying vec2 glTexCoord;\n"
     "void main() {\n"
-    "  gl_FragColor = pColor*texture2D(tex, glTexCoord, 0.);\n"
+	"  if(iTexOn)\n"
+    "  		gl_FragColor = pColor*texture2D(tex, glTexCoord, 0.);\n"
+	"  else\n"
+	"		gl_FragColor = pColor;"
     "}\n";
 
 static const glm::mat4 inverse_z_mat = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
@@ -90,6 +94,7 @@ GraphicsOGL :: GraphicsOGL() {
 
 	curProgram = 0;
 	globalTime = 0;
+	isTextureEnabled = 1;
 
 
 
@@ -293,26 +298,14 @@ void GraphicsOGL :: display() {
 					glVertex3f(x + r*xN, y + r*yN, depth);
 			}
 		glEnd();
+	}*/
+
+	void GraphicsOGL :: fillCircle(float x, float y, float r) {
+
+		fillPolygon(x, y, r, 100, 0);
 	}
 
-	void GraphicsOGL :: fillCircle(float x, float y, float r, int vertNum) {
-		float depth = 0, dir, xN, yN;
-	
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f(.5,.5);
-				glVertex3f(x, y, depth);
-			for(float i = 0; i < vertNum+1; i++) {
-				dir = i/vertNum*360;
-				xN = calcLenX(1,dir);
-				yN = -calcLenY(1,dir);
-	
-				glTexCoord2f(xN,yN);
-					glVertex3f(x + r*xN, y + r*yN, depth);
-			}
-		glEnd();
-	}
-
-	void GraphicsOGL :: drawPolygon(float x, float y, float r, int vertNum, float angle) {
+	/*void GraphicsOGL :: drawPolygon(float x, float y, float r, int vertNum, float angle) {
 		float depth = 0, dir, xN, yN;
 	
 		glBegin(GL_LINE_LOOP);
@@ -328,8 +321,6 @@ void GraphicsOGL :: display() {
 	}*/
 
 	void GraphicsOGL :: fillPolygon(float x, float y, float r, int vertNum, float angle) {
-
-
 		y += 152;
 
 
@@ -342,7 +333,7 @@ void GraphicsOGL :: display() {
 		tCoords[0] = .5; tCoords[1] = .5;
 		vVertices[0] = x; vVertices[1] = y; vVertices[2] = 0;
 		for(int i = 0; i < vertNum+1; i++) {
-			dir = angle + 1.*i/vertNum*360;
+			dir = angle + (i + 0.)/vertNum*360.;
 			xN = calcLenX(1,dir);
 			yN = -calcLenY(1,dir);
 
@@ -355,8 +346,6 @@ void GraphicsOGL :: display() {
 		}
 
 		for(int i = 0; i < numPts*3; i += 3) {
-			drawString(1300,400+i/3*12,to_string(vVertices[i]) + ", " + to_string(vVertices[i+1]) + ", " + to_string(vVertices[i+2]));
-
 			vVertices[i] = (vVertices[i]/1920.*2 - 1.);
 			vVertices[i+1] = -(vVertices[i+1]/1200.*2 - 1.);
 		}
@@ -364,8 +353,7 @@ void GraphicsOGL :: display() {
 
 		glUseProgram(shader_program_);
 
-		// Apply Projection Matrix
-
+		glUniform1i(glGetUniformLocation(shader_program_,"iTexOn"),isTextureEnabled);
 
 		// Set Drawing Color
 		glUniform4fv(uniform_color_, 1, glm::value_ptr(drawColor));
@@ -378,17 +366,24 @@ void GraphicsOGL :: display() {
 		glEnableVertexAttribArray(attrib_texcoords_);
 
 
-		glDrawArrays(GL_POINTS, 0, numPts);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, numPts);
 
 		glUseProgram(0);
 	}
 
 	void GraphicsOGL :: drawTexture(float x, float y, Texture* tex) {
 		
+		if(tex == NULL)
+			return;
+
 		drawTextureScaled(x, y, 1, 1, tex);
 	}
 
 	void GraphicsOGL :: drawTextureScaled(float x, float y, float xS, float yS, Texture* tex) {
+
+		if(tex == NULL)
+			return;
+
 		glDisable(GL_CULL_FACE);
 		glEnable(GL_TEXTURE_2D);
 		tex->bind(GL_TEXTURE0);
@@ -449,8 +444,7 @@ void GraphicsOGL :: display() {
 
 		glUseProgram(shader_program_);
 
-		// Apply Projection Matrix
-
+		glUniform1i(glGetUniformLocation(shader_program_,"iTexOn"),isTextureEnabled);
 
 		// Set Drawing Color
 		glUniform4fv(uniform_color_, 1, glm::value_ptr(drawColor));
@@ -582,6 +576,9 @@ void GraphicsOGL :: display() {
 
 	float GraphicsOGL :: drawCharScaled(float x, float y, float xS, float yS, char c) {
 		Texture* t = curFont->getChar(c);
+
+		if(t == NULL)
+			return 0;
 
 		if(c == 'g' || c == 'p' || c == 'q' || c == 'j' || c == 'y')
 			y += yS*t->getHeight()*.25;
