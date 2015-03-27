@@ -11,6 +11,7 @@
 #include "tango-gl-renderer/transform.h"
 #include "tango_data.h"
 #include "Renderable.h"
+#include "Graphics/GraphicsOGL.h"
 
 class TangoData;
 class Mesh : public Renderable {
@@ -22,6 +23,7 @@ class Mesh : public Renderable {
 		int getPointNumber();		// Get Number of Points in Mesh
 		int getPointCloudNumber();
 		int getMaxCloudPoints();
+		int saveToFile(GraphicsOGL*, string);
 		void addPoints(float*, int, const glm::mat4);
 		static int getCurCloud();
 

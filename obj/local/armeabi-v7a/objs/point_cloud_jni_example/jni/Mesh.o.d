@@ -136,7 +136,28 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/sstream \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_client_api.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Renderable.h \
- C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/drawable_object.h
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/drawable_object.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/GraphicsOGL.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../tango_data.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Texture.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Image.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../CImg.h \
+ C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdarg \
+ C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/ctime \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/unistd.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/select.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/sysconf.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/capability.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/pathconf.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../libpng/png.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/zlib.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/zconf.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../libpng/pngconf.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/setjmp.h \
+ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/machine/setjmp.h \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Font.h \
+ C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/map \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/FontController.h
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Mesh.h:
 
@@ -411,3 +432,45 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_client
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Renderable.h:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/drawable_object.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/GraphicsOGL.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../tango_data.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Texture.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Image.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../CImg.h:
+
+C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdarg:
+
+C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/ctime:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/unistd.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/select.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/sysconf.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/capability.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/pathconf.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../libpng/png.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/zlib.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/zconf.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/../libpng/pngconf.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/setjmp.h:
+
+C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/machine/setjmp.h:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/Font.h:
+
+C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/map:
+
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/FontController.h:

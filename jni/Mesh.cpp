@@ -16,7 +16,8 @@
 
 #include "Mesh.h"
 #include "Renderable.h"
-
+#include "Graphics/GraphicsOGL.h"
+#include <stdio.h>
 
 
 static const glm::mat4 inverse_z_mat = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
@@ -34,7 +35,7 @@ Mesh :: Mesh(int maxPoints) : Renderable() {
 
 	curCloud = 0;
 	numClouds = 1000;
-	resScale = 1;
+	resScale = 1;//00;
 
 
 	//Initialize Point Array
@@ -50,6 +51,34 @@ Mesh :: Mesh(int maxPoints) : Renderable() {
 
 Mesh :: ~Mesh() {
 	delete [] pointArray;
+}
+
+int Mesh :: saveToFile(GraphicsOGL* gl, string fileName) {
+
+	string fN = "/sdcard/";
+		fN = fN + fileName;
+
+
+	FILE *f = fopen(fN.c_str(), "w");
+
+	if(f == NULL)
+		return false;
+
+	int k = 0;
+
+		for(int i = 0; i < numClouds; i++) {
+
+			if(pointArraySize[i] == 0)
+				continue;
+
+			for(int l = 0; l < pointArraySize[i]; l += 3) {
+				fprintf(f, "%f %f %f\n", pointArray[i][l], pointArray[i][l+1], pointArray[i][l+2]);
+			}
+		}
+
+	fclose(f);
+
+	return true;
 }
 
 int Mesh :: getCurCloud() {
@@ -68,9 +97,12 @@ void Mesh :: addPoints(float* depthBuffer, int depthBufferSize, const glm::mat4 
 
 	// Find Size of Current Point Cloud
 	pointArraySize[curCloud] = 0;
-	for(int i = 0; i < depthBufferSize; i += 3*resScale)
-		pointArraySize[curCloud]++;
-	//pointArraySize += depthBufferSize/3;
+
+	if(resScale == 1)
+		pointArraySize[curCloud] = depthBufferSize;
+	else
+		for(int i = 0; i < depthBufferSize; i += resScale)
+			pointArraySize[curCloud]++;
 
 
 	// Get Model Matrix
@@ -79,12 +111,12 @@ void Mesh :: addPoints(float* depthBuffer, int depthBufferSize, const glm::mat4 
 
 
 	// Create New Array for Current Cloud
-	pointArray[curCloud] = new float[pointArraySize[curCloud]*3];
+	pointArray[curCloud] = new float[pointArraySize[curCloud]];
 
 
 	// Add Points to Cloud
 	int k = 0;
-	for(int i = 0; i < depthBufferSize; i += 3*resScale) {
+	for(int i = 0; i < pointArraySize[curCloud]; i += 3*resScale) {
 
 		// Get Point Vector
 		curVec = glm::vec4(depthBuffer[i],depthBuffer[i+1],depthBuffer[i+2],1);
