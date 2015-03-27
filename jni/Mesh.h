@@ -20,6 +20,8 @@ class Mesh : public Renderable {
 		~Mesh();
 		void Render(glm::mat4, glm::mat4);
 		int getPointNumber();		// Get Number of Points in Mesh
+		int getPointCloudNumber();
+		int getMaxCloudPoints();
 		void addPoints(float*, int, const glm::mat4);
 		static int getCurCloud();
 

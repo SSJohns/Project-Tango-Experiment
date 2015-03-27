@@ -33,7 +33,7 @@ Mesh :: Mesh(int maxPoints) : Renderable() {
 
 
 	curCloud = 0;
-	numClouds = 50;
+	numClouds = 1000;
 	resScale = 1;
 
 
@@ -119,6 +119,15 @@ int Mesh :: getPointNumber() {
 	return number;
 }
 
+int Mesh :: getPointCloudNumber() {
+
+	return numClouds;
+}
+
+int Mesh :: getMaxCloudPoints() {
+
+	return maxPointNum;
+}
 
 void Mesh :: Render(glm::mat4 projection_mat, glm::mat4 view_mat) {
 	//isDrawing = true;

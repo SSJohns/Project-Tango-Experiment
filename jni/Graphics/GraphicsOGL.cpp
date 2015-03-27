@@ -283,22 +283,12 @@ void GraphicsOGL :: display() {
 			glTexCoord2f(0,1);
 				glVertex3f(x1, y2, depth);
 		glEnd();
-	}
-
-	void GraphicsOGL :: drawCircle(float x, float y, float r, int vertNum) {
-		float depth = 0, dir, xN, yN;
-	
-		glBegin(GL_LINE_LOOP);
-			for(float i = 0; i < vertNum; i++) {
-				dir = i/vertNum*360;
-				xN = calcLenX(1,dir);
-				yN = -calcLenY(1,dir);
-	
-				glTexCoord2f(xN,yN);
-					glVertex3f(x + r*xN, y + r*yN, depth);
-			}
-		glEnd();
 	}*/
+
+	void GraphicsOGL :: drawCircle(float x, float y, float r) {
+
+		//drawPolygon(x, y, r, 100, 0);
+	}
 
 	void GraphicsOGL :: fillCircle(float x, float y, float r) {
 
@@ -321,7 +311,7 @@ void GraphicsOGL :: display() {
 	}*/
 
 	void GraphicsOGL :: fillPolygon(float x, float y, float r, int vertNum, float angle) {
-		y += 152;
+		y += 100;
 
 
 		int numPts = vertNum+2;
@@ -387,6 +377,7 @@ void GraphicsOGL :: display() {
 		glDisable(GL_CULL_FACE);
 		glEnable(GL_TEXTURE_2D);
 		tex->bind(GL_TEXTURE0);
+		isTextureEnabled = true;
 
 		glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -400,7 +391,7 @@ void GraphicsOGL :: display() {
 		w = xS*tex->getWidth();
 		h = yS*tex->getHeight();
 
-		y += 152;
+		//y += 152;
 
 		x1 = x;
 		y1 = y;
@@ -461,6 +452,7 @@ void GraphicsOGL :: display() {
 
 		glUseProgram(0);
 
+		isTextureEnabled = false;
 		glBindTexture(GL_TEXTURE0, 0);
 		glDisable(GL_TEXTURE_2D);
 	}

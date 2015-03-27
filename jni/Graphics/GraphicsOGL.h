@@ -44,8 +44,8 @@ class GraphicsOGL {
 			void drawLine(float,float,float,float);
 			void drawRect(float,float,float,float);
 			void fillRect(float,float,float,float);
-			void drawCircle(float,float,float,int);
-			void fillCircle(float,float,float,int);
+			void drawCircle(float,float,float);
+			void fillCircle(float,float,float);
 			void drawPolygon(float,float,float,int,float);
 			void fillPolygon(float,float,float,int,float);
 

@@ -1,9 +1,7 @@
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/objs/point_cloud_jni_example/jni/tango_pointcloud.o: \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_pointcloud.cpp \
+ C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cmath \
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/jni.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs_elf.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/android/api-level.h \
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/string \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/axis.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/drawable_object.h \
@@ -19,7 +17,6 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/GLES2/gl2ext.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/glm.hpp \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/_fixes.hpp \
- C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cmath \
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/climits \
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cfloat \
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/limits \
@@ -146,13 +143,9 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/map \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/FontController.h
 
+C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cmath:
+
 C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/jni.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs_elf.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/android/api-level.h:
 
 C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/string:
 
@@ -183,8 +176,6 @@ C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/GLES2/gl2ext.h:
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/glm.hpp:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/_fixes.hpp:
-
-C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cmath:
 
 C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/climits:
 

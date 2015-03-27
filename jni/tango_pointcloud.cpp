@@ -16,6 +16,7 @@
 
 #define GLM_FORCE_RADIANS
 
+#include <cmath>
 #include <jni.h>
 #include <string>
 
@@ -25,6 +26,7 @@
 #include "tango-gl-renderer/gl_util.h"
 #include "tango-gl-renderer/grid.h"
 #include "tango-gl-renderer/transform.h"
+#include "Functions.h"
 
 #include <sstream>
 #include <cmath>
@@ -39,9 +41,24 @@ using namespace std;
 long long totalPointNumber = 0;
 
 
+// CURSOR VARIABLES
+	int cursorX = 0,
+		cursorY = 0,
+		realCT = 0,
+		cursorTouching = 0,
+		cTTimerMax = 5,
+		cTTimer = cTTimerMax;
 
-bool glCreated = false;
+// MENU VARIABLES
+	int updatePoints = 0;
 
+
+	bool glCreated = false;
+
+
+
+
+float dir = 0;
 GraphicsOGL* gl = NULL;
 
 
@@ -86,13 +103,6 @@ enum CameraType {
   TOP_DOWN = 2
 };
 CameraType camera_type;;
-
-
-std::string to_string (float number){
-    std::ostringstream buff;
-    buff<<number;
-    return buff.str();
-}
 
 
 // Render and camera controlling constant values.
@@ -195,6 +205,32 @@ bool SetupGraphics(int w, int h) {
   return true;
 }
 
+int checkCircleButton(int x, int y, int r, string str) {
+
+	int pressed;
+	float b = 5;
+	float xDis, yDis;
+	xDis = cursorX-x;
+	yDis = cursorY-y;
+
+	pressed = (cursorTouching && sqrt(xDis*xDis + yDis*yDis) < r);
+
+
+	gl->setColor(0,0,0,1);
+	gl->drawStringScaled(x-r+b,y+r,2,2,str);
+
+	if(pressed)
+		r += 8;
+
+	gl->setColor(1,1,1,1);
+	gl->fillCircle(x,y,r-b);
+	gl->setColor(0,0,0,1);
+	gl->fillCircle(x,y,r);
+
+
+	return pressed;
+}
+
 // GL render loop.
 bool RenderFrame() {
 	if(gl == NULL)
@@ -268,7 +304,7 @@ bool RenderFrame() {
     cam->SetPosition(glm::vec3(0.0f, 0.0f, cam_cur_dist));
   }
 
-  gl->update3D(cam->GetOrthoMatrix(), cam->GetViewMatrix());
+  //gl->update3D(cam->GetOrthoMatrix(), cam->GetViewMatrix());
 
   // Set axis transformation, axis representing device's pose.
   axis->SetTransformationMatrix(oc_2_ow_mat_motion);
@@ -283,10 +319,10 @@ bool RenderFrame() {
   */
 
   //Only Update if the Cloud is New!
-  if(TangoData::GetInstance().hasNewCloud) {
+  if(updatePoints && TangoData::GetInstance().hasNewCloud) {
 	  totalPointNumber += TangoData::GetInstance().depth_buffer_size;
 
-	  mesh->addPoints(TangoData::GetInstance().depth_buffer,TangoData::GetInstance().depth_buffer_size*3, oc_2_ow_mat_depth);
+	  mesh->addPoints(TangoData::GetInstance().depth_buffer, TangoData::GetInstance().depth_buffer_size*3, oc_2_ow_mat_motion);
 	  TangoData::GetInstance().hasNewCloud = false;
   }
   mesh->Render(cam->GetProjectionMatrix(), cam->GetViewMatrix());
@@ -298,21 +334,61 @@ bool RenderFrame() {
   gl->setColor(0,0,0,1);
   gl->setFont("8bit");
 
-  float dY = 0;
-  gl->drawString(0,dY,"Frame Delta Time (ms): " + to_string(TangoData::GetInstance().depth_frame_delta_time));
-  	  dY += 12;
-  gl->drawString(0,dY,"Camera Distance: " + to_string(cam_cur_dist));
-  	  dY += 12;
-  gl->drawString(0,dY,"Point Number: " + to_string(mesh->getPointNumber()));
-  	  dY += 12;
-  gl->drawString(0,dY,to_string(totalPointNumber*3.*4/1024/1024) + "MB");
-  gl->drawString(0,dY,"Average Depth (m): " + to_string(TangoData::GetInstance().depth_average_length));
-  	  	  dY += 12;
-  gl->drawString(0,dY,TangoData::GetInstance().pose_string);
-  	  dY += 12;
-  gl->drawString(0,dY,TangoData::GetInstance().event_string);
-  	  	  dY += 12;
 
+  float s = 2, dY = 0;//-150;
+  gl->drawStringScaled(0,dY,s,s,"Frame Delta Time (ms): " + to_string(TangoData::GetInstance().depth_frame_delta_time));
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,"_Camera Distance: " + to_string(cam_cur_dist));
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,"Point Number: " + to_string(mesh->getPointNumber()) + " / " + to_string(mesh->getMaxCloudPoints()*mesh->getPointCloudNumber()))	;
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,"Current File Size: " + to_string(mesh->getPointNumber()*3.*4/1024/1024) + " / " + to_string(mesh->getMaxCloudPoints()*mesh->getPointCloudNumber()*3.*4/1024/1024) + " MB");
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,"Total Point Number: " + to_string(totalPointNumber));
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,"Estimated File Size: " + to_string(totalPointNumber*3.*4/1024/1024) + " MB");
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,"Average Depth (m): " + to_string(TangoData::GetInstance().depth_average_length));
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,TangoData::GetInstance().pose_string);
+  	  dY += 12*s;
+  gl->drawStringScaled(0,dY,s,s,TangoData::GetInstance().event_string);
+  	  dY += 12*s;
+
+
+  gl->drawStringScaled(0,0,s,s,TangoData::GetInstance().errorString);
+  __android_log_print(ANDROID_LOG_INFO, "Junk", "%s", (TangoData::GetInstance().errorString).c_str());
+
+
+  gl->setColor(0,0,0,1);
+  dir += 1;
+
+  if(realCT && !cursorTouching) {
+	  cursorTouching = true;
+
+	  if(cTTimer == -1)
+	  		  cTTimer = cTTimerMax;
+  }
+  else if(!realCT && cursorTouching) {
+	  if(cTTimer > -1)
+		  cTTimer--;
+
+	  if(cTTimer == -1) {
+		  cursorTouching = 0;
+		  realCT = false;
+	  }
+  }
+
+  if(cursorTouching)
+	  gl->fillCircle(cursorX,cursorY,50);
+
+
+  if(checkCircleButton(100,1000,80, "Hold to\nAdd Points"))
+	  updatePoints = true;
+  else
+	  updatePoints = false;
+
+  realCT = 0;
 
   return true;
 }
@@ -435,17 +511,18 @@ Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_setCamera(
   SetCamera(static_cast<CameraType>(camera_index));
 }
 
-// Tango data interfaces.
-/*JNIEXPORT jstring JNICALL
-Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_getPoseString(
-    JNIEnv* env, jobject) {
-  pthread_mutex_lock(&TangoData::GetInstance().pose_mutex);
-  std::string ret_string = TangoData::GetInstance().pose_string;
-  pthread_mutex_unlock(&TangoData::GetInstance().pose_mutex);
-  return (env)->NewStringUTF(ret_string.c_str());
-}*/
+JNIEXPORT void JNICALL
+Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_passTouchPos(
+    JNIEnv*, jobject, float x, float y) {
+  cursorX = x;
+  cursorY = y;
+}
 
-
+JNIEXPORT void JNICALL
+Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_passTouch(
+    JNIEnv*, jobject, int touched) {
+  realCT = touched;
+}
 
 // Touching GL interface.
 JNIEXPORT void JNICALL

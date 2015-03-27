@@ -47,6 +47,7 @@ public class TangoJNINative {
   public static native void setCamera(int cameraIndex);
   
   public static native void passTouchPos(float x, float y);
+  public static native void passTouch(int touched);
   
   public static native float startSetCameraOffset();
   

@@ -118,6 +118,8 @@ TangoData::TangoData() : config_(nullptr) {
   is_xyzij_dirty = false;
   is_pose_dirty = false;
 
+  errorString = "";
+
   d_2_ss_mat_motion = glm::mat4(1.0f);
   d_2_ss_mat_depth = glm::mat4(1.0f);
   d_2_imu_mat = glm::mat4(1.0f);
@@ -130,6 +132,7 @@ bool TangoData::SetConfig() {
   config_ = TangoService_getConfig(TANGO_CONFIG_DEFAULT);
   if (config_ == NULL) {
     LOGE("TangoService_getConfig(): Failed");
+    errorString += "TangoService_getConfig(): Failed\n";
     return false;
   }
 
@@ -137,6 +140,7 @@ bool TangoData::SetConfig() {
   if (TangoConfig_setBool(config_, "config_enable_depth", true) !=
       TANGO_SUCCESS) {
     LOGE("config_enable_depth Failed");
+    errorString += "config_enable_depth Failed\n";
     return false;
   }
 
@@ -147,6 +151,7 @@ bool TangoData::SetConfig() {
               TangoData::GetInstance().lib_version_string.c_str()),
           kVersionStringLength) != TANGO_SUCCESS) {
     LOGE("Get tango_service_library_version Failed");
+    errorString += "Get tango_service_library_version Failed\n";
     return false;
   }
 
@@ -156,6 +161,7 @@ bool TangoData::SetConfig() {
   if (TangoConfig_getInt32(config_, "max_point_cloud_elements", &temp) !=
       TANGO_SUCCESS) {
     LOGE("Get max_point_cloud_elements Failed");
+    errorString += "Get max_point_cloud_elements Failed\n";
     return false;
   }
   max_vertex_count = static_cast<uint32_t>(temp);
@@ -174,6 +180,7 @@ bool TangoData::ConnectCallbacks() {
   // Attach the onXYZijAvailable callback.
   if (TangoService_connectOnXYZijAvailable(onXYZijAvailable) != TANGO_SUCCESS) {
     LOGI("TangoService_connectOnXYZijAvailable(): Failed");
+    errorString += "TangoService_connectOnXYZijAvailable(): Failed\n";
     return false;
   }
 
@@ -187,12 +194,14 @@ bool TangoData::ConnectCallbacks() {
   if (TangoService_connectOnPoseAvailable(1, &pairs, onPoseAvailable)
       != TANGO_SUCCESS) {
     LOGI("TangoService_connectOnPoseAvailable(): Failed");
+    errorString += "TangoService_connectOnPoseAvailable(): Failed\n";
     return false;
   }
 
   // Set the event callback listener.
   if (TangoService_connectOnTangoEvent(onTangoEvent) != TANGO_SUCCESS) {
     LOGI("TangoService_connectOnTangoEvent(): Failed");
+    errorString += "TangoService_connectOnTangoEvent(): Failed\n";
     return false;
   }
   return true;
@@ -300,6 +309,7 @@ void TangoData::UpdateXYZijData() {
   if (TangoService_getPoseAtTime(prev_depth_timestamp, pairs, &pose) !=
       TANGO_SUCCESS) {
     LOGE("TangoService_getPoseAtTime(): Failed");
+    errorString += "TangoService_getPoseAtTime(): Failed\n";
   }
   glm::vec3 translation =
       glm::vec3(pose.translation[0], pose.translation[1], pose.translation[2]);

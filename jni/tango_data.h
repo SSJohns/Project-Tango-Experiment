@@ -24,6 +24,7 @@
 #include <string>
 #include "tango_client_api.h"
 #include "tango-gl-renderer/gl_util.h"
+using namespace std;
 
 const int kMeterToMillimeter = 1000;
 const int kVersionStringLength = 27;
@@ -68,6 +69,8 @@ class TangoData {
   float* depth_buffer;
   uint32_t depth_buffer_size;
   bool is_xyzij_dirty;
+
+  string errorString;
 
   TangoPoseData cur_pose_data;
   TangoPoseData prev_pose_data;
