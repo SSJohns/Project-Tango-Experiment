@@ -1,29 +1,14 @@
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/objs/point_cloud_jni_example/jni/Mesh.o: \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Mesh.cpp \
+ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Functions.h \
+ C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/sstream \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Mesh.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/axis.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/drawable_object.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/gl_util.h \
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/stdlib.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs_elf.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/android/api-level.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/string.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/malloc.h \
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/alloca.h \
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/strings.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/types.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/stdint.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/_types.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/machine/_types.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/posix_types.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/stddef.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/compiler.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/asm/posix_types.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/asm/types.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/types.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/machine/kernel.h \
- C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/sysmacros.h \
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/memory.h \
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/jni.h \
  C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/android/log.h \
@@ -41,7 +26,6 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/fwd.hpp \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_int.hpp \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/setup.hpp \
- C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdint \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_float.hpp \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_vec.hpp \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/precision.hpp \
@@ -58,7 +42,6 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_vec4.inl \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/mat2x2.hpp \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_mat2x2.hpp \
- C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/initializer_list \
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/algorithm \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_mat2x2.inl \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/mat2x3.hpp \
@@ -133,7 +116,6 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/grid.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/transform.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_data.h \
- C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/sstream \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_client_api.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Renderable.h \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/drawable_object.h \
@@ -159,6 +141,10 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//obj/local/armeabi-v7a/o
  C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/map \
  C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Graphics/FontController.h
 
+C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Functions.h:
+
+C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/sstream:
+
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/Mesh.h:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/axis.h:
@@ -169,43 +155,9 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-ren
 
 C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/stdlib.h:
 
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/cdefs_elf.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/android/api-level.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/string.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/malloc.h:
-
 C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/alloca.h:
 
 C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/strings.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/types.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/stdint.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/_types.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/machine/_types.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/posix_types.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/stddef.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/compiler.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/asm/posix_types.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/asm/types.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/linux/types.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/machine/kernel.h:
-
-C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/sys/sysmacros.h:
 
 C:/Android/android-ndk/platforms/android-17/arch-arm/usr/include/memory.h:
 
@@ -241,8 +193,6 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-ren
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/setup.hpp:
 
-C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdint:
-
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_float.hpp:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_vec.hpp:
@@ -274,8 +224,6 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-ren
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/mat2x2.hpp:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/glm/detail/type_mat2x2.hpp:
-
-C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/initializer_list:
 
 C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/algorithm:
 
@@ -424,8 +372,6 @@ C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-ren
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango-gl-renderer/transform.h:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_data.h:
-
-C:/Android/android-ndk/sources/cxx-stl/gnu-libstdc++/4.8/include/sstream:
 
 C:/Users/Ryan/Documents/GitHub/Project-Tango-Experiment//jni/../jni/tango_client_api.h:
 

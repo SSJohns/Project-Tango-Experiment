@@ -244,50 +244,141 @@ void GraphicsOGL :: display() {
 		glBegin(GL_POINTS);
 			glVertex3f(x, y, depth);
 		glEnd();
-	}
+	}*/
 
 	void GraphicsOGL :: drawLine(float x1, float y1, float x2, float y2) {
-		float depth = 0;
-	
-		glBegin(GL_LINES);
-			glVertex3f(x1, y1, depth);
-			glVertex3f(x2, y2, depth);
-		glEnd();
+		y1 += 100;
+		y2 += 100;
+
+		float tDir, dir, dis, xN1, yN1, xN2, yN2, vX, vY, pX, pY, pZ;
+
+		GLfloat vVertices[2*3];
+		GLfloat tCoords[2*2];
+
+		tCoords[0] = 0; tCoords[1] = 0;
+			vVertices[0] = x1; vVertices[1] = y1; vVertices[2] = 0;
+		tCoords[2] = 1; tCoords[3] = 1;
+			vVertices[3] = x2; vVertices[4] = y2; vVertices[5] = 0;
+
+		for(int i = 0; i < 2*3; i += 3) {
+			vVertices[i] = (vVertices[i]/1920.*2 - 1.);
+			vVertices[i+1] = -(vVertices[i+1]/1200.*2 - 1.);
+		}
+
+
+		glUseProgram(shader_program_);
+
+		glUniform1i(glGetUniformLocation(shader_program_,"iTexOn"),isTextureEnabled);
+
+		// Set Drawing Color
+		glUniform4fv(uniform_color_, 1, glm::value_ptr(drawColor));
+		glUniformMatrix4fv(uniform_mvp_mat_, 1, GL_FALSE, glm::value_ptr(mvp_mat));
+
+		// Bind vertex buffer.
+		glVertexAttribPointer(attrib_vertices_, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+		glEnableVertexAttribArray(attrib_vertices_);
+		glVertexAttribPointer(attrib_texcoords_, 2, GL_FLOAT, GL_FALSE, 0, tCoords);
+		glEnableVertexAttribArray(attrib_texcoords_);
+
+
+		glDrawArrays(GL_LINES, 0, 2);
+
+		glUseProgram(0);
 	}
 
-	void GraphicsOGL :: drawRect(float x1, float y1, float x2, float y2) {
-		float depth = 0;
-	
-		glBegin(GL_LINE_LOOP);
-			glTexCoord2f(0,0);
-				glVertex3f(x1, y1, depth);
-			glTexCoord2f(1,0);
-				glVertex3f(x2, y1, depth);
-			glTexCoord2f(1,1);
-				glVertex3f(x2, y2, depth);
-			glTexCoord2f(0,1);
-				glVertex3f(x1, y2, depth);
-		glEnd();
+
+	void GraphicsOGL :: drawRect(float x, float y, float w, float h) {
+		//y += 100;
+
+		float tDir, dir, dis, xN1, yN1, xN2, yN2, vX, vY, pX, pY, pZ;
+
+		GLfloat vVertices[4*3];
+		GLfloat tCoords[4*2];
+
+		tCoords[0] = 0; tCoords[1] = 0;
+			vVertices[0] = x; vVertices[1] = y; vVertices[2] = 0;
+		tCoords[2] = 1; tCoords[3] = 0;
+			vVertices[3] = x+w; vVertices[4] = y; vVertices[5] = 0;
+		tCoords[4] = 1; tCoords[5] = 1;
+			vVertices[6] = x+w; vVertices[7] = y+h; vVertices[8] = 0;
+		tCoords[2] = 0; tCoords[3] = 1;
+			vVertices[9] = x; vVertices[10] = y+h; vVertices[11] = 0;
+
+
+		for(int i = 0; i < 4*3; i += 3) {
+			vVertices[i] = (vVertices[i]/1920.*2 - 1.);
+			vVertices[i+1] = -(vVertices[i+1]/1200.*2 - 1.);
+		}
+
+
+		glUseProgram(shader_program_);
+
+		glUniform1i(glGetUniformLocation(shader_program_,"iTexOn"),isTextureEnabled);
+
+		// Set Drawing Color
+		glUniform4fv(uniform_color_, 1, glm::value_ptr(drawColor));
+		glUniformMatrix4fv(uniform_mvp_mat_, 1, GL_FALSE, glm::value_ptr(mvp_mat));
+
+		// Bind vertex buffer.
+		glVertexAttribPointer(attrib_vertices_, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+		glEnableVertexAttribArray(attrib_vertices_);
+		glVertexAttribPointer(attrib_texcoords_, 2, GL_FLOAT, GL_FALSE, 0, tCoords);
+		glEnableVertexAttribArray(attrib_texcoords_);
+
+
+		glDrawArrays(GL_LINE_LOOP, 0, 4);
+
+		glUseProgram(0);
+
 	}
 
-	void GraphicsOGL :: fillRect(float x1, float y1, float x2, float y2) {
-		float depth = 0;
-	
-		glBegin(GL_QUADS);
-			glTexCoord2f(0,0);
-				glVertex3f(x1, y1, depth);
-			glTexCoord2f(1,0);
-				glVertex3f(x2, y1, depth);
-			glTexCoord2f(1,1);
-				glVertex3f(x2, y2, depth);
-			glTexCoord2f(0,1);
-				glVertex3f(x1, y2, depth);
-		glEnd();
-	}*/
+	void GraphicsOGL :: fillRect(float x, float y, float w, float h) {
+		//y += 100;
+
+		float tDir, dir, dis, xN1, yN1, xN2, yN2, vX, vY, pX, pY, pZ;
+
+		GLfloat vVertices[4*3];
+		GLfloat tCoords[4*2];
+
+		tCoords[0] = 0; tCoords[1] = 0;
+			vVertices[0] = x; vVertices[1] = y; vVertices[2] = 0;
+		tCoords[2] = 1; tCoords[3] = 0;
+			vVertices[3] = x+w; vVertices[4] = y; vVertices[5] = 0;
+		tCoords[4] = 1; tCoords[5] = 1;
+			vVertices[6] = x+w; vVertices[7] = y+h; vVertices[8] = 0;
+		tCoords[2] = 0; tCoords[3] = 1;
+			vVertices[9] = x; vVertices[10] = y+h; vVertices[11] = 0;
+
+
+		for(int i = 0; i < 4*3; i += 3) {
+			vVertices[i] = (vVertices[i]/1920.*2 - 1.);
+			vVertices[i+1] = -(vVertices[i+1]/1200.*2 - 1.);
+		}
+
+
+		glUseProgram(shader_program_);
+
+		glUniform1i(glGetUniformLocation(shader_program_,"iTexOn"),isTextureEnabled);
+
+		// Set Drawing Color
+		glUniform4fv(uniform_color_, 1, glm::value_ptr(drawColor));
+		glUniformMatrix4fv(uniform_mvp_mat_, 1, GL_FALSE, glm::value_ptr(mvp_mat));
+
+		// Bind vertex buffer.
+		glVertexAttribPointer(attrib_vertices_, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+		glEnableVertexAttribArray(attrib_vertices_);
+		glVertexAttribPointer(attrib_texcoords_, 2, GL_FLOAT, GL_FALSE, 0, tCoords);
+		glEnableVertexAttribArray(attrib_texcoords_);
+
+
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+		glUseProgram(0);
+	}
 
 	void GraphicsOGL :: drawCircle(float x, float y, float r) {
 
-		//drawPolygon(x, y, r, 100, 0);
+		drawPolygon(x, y, r, 100, 0);
 	}
 
 	void GraphicsOGL :: fillCircle(float x, float y, float r) {
@@ -295,27 +386,75 @@ void GraphicsOGL :: display() {
 		fillPolygon(x, y, r, 100, 0);
 	}
 
-	/*void GraphicsOGL :: drawPolygon(float x, float y, float r, int vertNum, float angle) {
-		float depth = 0, dir, xN, yN;
-	
-		glBegin(GL_LINE_LOOP);
-			for(float i = 0; i < vertNum; i++) {
-				dir = angle + i/vertNum*360;
-				xN = calcLenX(1,dir);
-				yN = -calcLenY(1,dir);
-	
-				glTexCoord2f(xN,yN);
-					glVertex3f(x + r*xN, y + r*yN, depth);
-			}
-		glEnd();
-	}*/
+	void GraphicsOGL :: drawPolygon(float x, float y, float r, int vertNum, float angle) {
+		drawPolygon(x,y,r,r,vertNum,angle);
+	}
+
+	void GraphicsOGL :: drawPolygon(float x, float y, float rX, float rY, int vertNum, float angle) {
+		//y += 100;
+
+
+		int numPts = vertNum;
+		float tDir, dir, dis, xN1, yN1, xN2, yN2, vX, vY, pX, pY, pZ;
+
+		GLfloat vVertices[numPts*3];
+		GLfloat tCoords[numPts*2];
+
+		for(int i = 0; i < vertNum; i++) {
+			tDir = (i + 0.)/vertNum*360.;
+			dir = angle + tDir;
+
+			xN1 = calcLenX(1,tDir);
+			yN1 = calcLenY(1,tDir);
+			tCoords[2*i] = xN1;
+			tCoords[2*i + 1] = yN1;
+
+			pX = x + calcLenX(rX*xN1,angle) - calcLenY(rY*yN1,angle);
+			pY = y + calcLenY(rX*xN1,angle) + calcLenX(rY*yN1,angle);
+			pZ = 0;
+
+			vVertices[3*i] = pX;
+			vVertices[3*i + 1] = pY;
+			vVertices[3*i + 2] = pZ;
+		}
+
+		for(int i = 0; i < numPts*3; i += 3) {
+			vVertices[i] = (vVertices[i]/1920.*2 - 1.);
+			vVertices[i+1] = -(vVertices[i+1]/1200.*2 - 1.);
+		}
+
+
+		glUseProgram(shader_program_);
+
+		glUniform1i(glGetUniformLocation(shader_program_,"iTexOn"),isTextureEnabled);
+
+		// Set Drawing Color
+		glUniform4fv(uniform_color_, 1, glm::value_ptr(drawColor));
+		glUniformMatrix4fv(uniform_mvp_mat_, 1, GL_FALSE, glm::value_ptr(mvp_mat));
+
+		// Bind vertex buffer.
+		glVertexAttribPointer(attrib_vertices_, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+		glEnableVertexAttribArray(attrib_vertices_);
+		glVertexAttribPointer(attrib_texcoords_, 2, GL_FLOAT, GL_FALSE, 0, tCoords);
+		glEnableVertexAttribArray(attrib_texcoords_);
+
+
+		glDrawArrays(GL_LINE_LOOP, 0, numPts);
+
+		glUseProgram(0);
+	}
 
 	void GraphicsOGL :: fillPolygon(float x, float y, float r, int vertNum, float angle) {
-		y += 100;
+		fillPolygon(x,y,r,r,vertNum,angle);
+	}
+
+	void GraphicsOGL :: fillPolygon(float x, float y, float rX, float rY, int vertNum, float angle) {
+		//y += 100;
 
 
 		int numPts = vertNum+2;
-		float dir, xN, yN, vX, vY;
+		float tDir, dir, r, xN1, yN1, xN2, yN2, vX, vY, pX, pY, pZ;
+
 
 		GLfloat vVertices[numPts*3];
 		GLfloat tCoords[numPts*2];
@@ -323,16 +462,21 @@ void GraphicsOGL :: display() {
 		tCoords[0] = .5; tCoords[1] = .5;
 		vVertices[0] = x; vVertices[1] = y; vVertices[2] = 0;
 		for(int i = 0; i < vertNum+1; i++) {
-			dir = angle + (i + 0.)/vertNum*360.;
-			xN = calcLenX(1,dir);
-			yN = -calcLenY(1,dir);
+			tDir = (i + 0.)/vertNum*360.;
+			dir = angle + tDir;
 
-			tCoords[2 + 2*i] = xN;
-			tCoords[2 + 2*i + 1] = yN;
+			xN1 = calcLenX(1,tDir);
+			yN1 = calcLenY(1,tDir);
+			tCoords[2 + 2*i] = xN1;
+			tCoords[2 + 2*i + 1] = yN1;
 
-			vVertices[3 + 3*i] = x + r*xN;
-			vVertices[3 + 3*i + 1] = y + r*yN;
-			vVertices[3 + 3*i + 2] = 0;
+			pX = x + calcLenX(rX*xN1,angle) - calcLenY(rY*yN1,angle);
+			pY = y + calcLenY(rX*xN1,angle) + calcLenX(rY*yN1,angle);
+			pZ = 0;
+
+			vVertices[3 + 3*i] = pX;
+			vVertices[3 + 3*i + 1] = pY;
+			vVertices[3 + 3*i + 2] = pZ;
 		}
 
 		for(int i = 0; i < numPts*3; i += 3) {
@@ -583,6 +727,34 @@ void GraphicsOGL :: display() {
 		drawStringScaled(x,y,1,1,str);
 	}
 
+	void GraphicsOGL :: drawStringCentered(float x, float y, float xS, float yS, string str) {
+		int size = str.length();
+		int s = curFont->getChar('A')->getWidth(), e = -xS;
+
+		int curW = 0, maxW = 0, h = s;
+
+		for(int i = 0; i < size; i++) {
+			char c = str[i];
+
+			if(c == '\n') {
+				h += s*yS + 1;
+				maxW = max(curW,maxW);
+				curW = 0;
+			}
+			else if(c == ' ')
+				curW += s*xS + e;
+			else if(islower(c))
+				curW += s*xS + e;
+			else
+				curW += s*xS + e;
+		}
+
+		maxW = max(curW,maxW);
+
+		// Draw String
+		drawStringScaled(x-maxW/2.,y-h/2.,xS,yS,str);
+	}
+
 	void GraphicsOGL :: drawStringScaled(float x, float y, float xS, float yS, string str) {
 		int len = str.length();
 		char c;
@@ -608,29 +780,30 @@ void GraphicsOGL :: display() {
 	}
 
 //Graphics Mode
-/*void GraphicsOGL :: setOrtho() {
+void GraphicsOGL :: setOrtho() {
 
-	int SCREEN_WIDTH = 1920, SCREEN_HEIGHT = 1200;
-
+	/*int SCREEN_WIDTH = 1920, SCREEN_HEIGHT = 1200;
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, -1000, 1000);
 	glMatrixMode (GL_MODELVIEW);
-	glLoadIdentity();
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH);
-}*/
+	glLoadIdentity();*/
+	//glDisable(GL_LIGHTING);
+	glDepthFunc(GL_NEVER);
+	glDisable(GL_DEPTH_TEST);
+}
 
-/*void GraphicsOGL :: setPerspective() {
-	glMatrixMode(GL_PROJECTION);
+void GraphicsOGL :: setPerspective() {
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//glCamera->setProjection(this);
+	glCamera->setProjection(this);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	//glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH);
-}*/
+	glEnable(GL_LIGHTING);*/
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_DEPTH_TEST);
+}
 
 unsigned long GraphicsOGL :: getTime() {
 

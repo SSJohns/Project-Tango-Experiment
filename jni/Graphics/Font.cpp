@@ -48,6 +48,7 @@ Font2D :: Font2D(string fontName, bool ca) {
 	addChar('/');
 	addChar('[');
 	addChar(']');
+	addChar('%');
 }
 
 Texture* Font2D :: getChar(char c) {

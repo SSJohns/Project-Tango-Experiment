@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+#include "Functions.h"
 #include "Mesh.h"
 #include "Renderable.h"
 #include "Graphics/GraphicsOGL.h"
 #include <stdio.h>
+
+#define IO_NULL -1
+#define IO_SAVE 0
+#define IO_LOAD 1
 
 
 static const glm::mat4 inverse_z_mat = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
@@ -37,6 +42,9 @@ Mesh :: Mesh(int maxPoints) : Renderable() {
 	numClouds = 1000;
 	resScale = 1;//00;
 
+	ioPos = -1;
+	ioProcess = IO_NULL;
+
 
 	//Initialize Point Array
 	pointArray = new float*[numClouds];
@@ -53,33 +61,196 @@ Mesh :: ~Mesh() {
 	delete [] pointArray;
 }
 
+void Mesh :: clear() {
+
+	if(isIOOpen())
+		return;
+
+	curCloud = 0;
+	for(int i = 0; i < numClouds; i++) {
+		delete [] pointArray[i];
+
+		// Find Size of Current Point Cloud
+		pointArraySize[i] = 0;
+
+		// Create New Array for Current Cloud
+		pointArray[i] = new float[0];
+	}
+}
+
+bool Mesh :: isIOOpen() {
+	return (ioProcess != IO_NULL);
+}
+
+bool Mesh :: isSaving() {
+	return (ioProcess == IO_SAVE);
+}
+
+bool Mesh :: isLoading() {
+	return (ioProcess == IO_LOAD);
+}
+
 int Mesh :: saveToFile(GraphicsOGL* gl, string fileName) {
+
+	if(isIOOpen())
+		return true;
+
+	string fN = "/sdcard/";
+		fN = fN + fileName;
+
+	// Open File for Writing
+	curFile = fopen(fN.c_str(), "w");
+
+	// If File Could Not be Opened, Return False
+	if(curFile == NULL)
+		return false;
+
+	ioPos = 0;
+	ioProcess = IO_SAVE;
+
+	return true;
+}
+
+int Mesh :: continueSaving(GraphicsOGL* gl) {
+
+	if(!isSaving())
+		return false;
+
+	float bX, bY, bW,bH;
+	bX = bW = gl->getScreenWidth()*.333;
+	bY = bH = gl->getScreenHeight()*.333;
+
+	// Print all Point Clouds to File
+		if(ioPos == 0)
+			fprintf(curFile, "%i\n", curCloud);
+
+		int endPos = min(ioPos+2,curCloud);
+
+		int i, k;
+		for(k = 0; ioPos < endPos; ioPos++) {
+
+			if(ioPos+1 >= curCloud) {
+				ioPos = -1;
+				ioProcess = IO_NULL;
+				fprintf(curFile, "%i\n", -1);
+				fclose(curFile);
+				curFile = NULL;
+				return true;
+			}
+
+			float perc = 1.*ioPos/curCloud;
+			string percStr = to_string(100*perc) + " %";
+
+			gl->setColor(.2,.2,.2,1);
+			gl->fillRect(bX,bY,bW,bH);
+			gl->setColor(0,0,0,1);
+			gl->fillRect(bX+25,bY+100, bW-50,30);
+			gl->setColor(1,1,1,1);
+			gl->fillRect(bX+25,bY+100, perc*(bW-50),30);
+			gl->drawStringCentered(bX+bW*.5,bY+50,2,2,percStr);
+
+			fprintf(curFile, "%i\n", pointArraySize[ioPos]);
+
+			// If Current Point Cloud Empty, Skip
+			if(pointArraySize[ioPos] == 0)
+				continue;
+
+			// Print Points as x y z Data
+			for(int l = 0; l < pointArraySize[ioPos]; l += 3, k++)
+				fprintf(curFile, "%i %f %f %f\n", ioPos, pointArray[ioPos][l], pointArray[ioPos][l+1], pointArray[ioPos][l+2]);
+		}
+}
+
+int Mesh :: loadFile(GraphicsOGL* gl, string fileName) {
+
+	if(isIOOpen())
+			return false;
 
 	string fN = "/sdcard/";
 		fN = fN + fileName;
 
 
-	FILE *f = fopen(fN.c_str(), "w");
+	// Open File for Reading
+	curFile = fopen(fN.c_str(), "r");
 
-	if(f == NULL)
+	// If File Could Not be Opened, Return False
+	if(curFile == NULL)
 		return false;
 
-	int k = 0;
-
-		for(int i = 0; i < numClouds; i++) {
-
-			if(pointArraySize[i] == 0)
-				continue;
-
-			for(int l = 0; l < pointArraySize[i]; l += 3) {
-				fprintf(f, "%f %f %f\n", pointArray[i][l], pointArray[i][l+1], pointArray[i][l+2]);
-			}
-		}
-
-	fclose(f);
+	clear();
+	ioPos = 0;
+	ioProcess = IO_LOAD;
 
 	return true;
 }
+
+int Mesh :: continueLoading(GraphicsOGL* gl) {
+
+	if(!isLoading())
+			return false;
+
+	float bX, bY, bW,bH;
+	bX = bW = gl->getScreenWidth()*.333;
+	bY = bH = gl->getScreenHeight()*.333;
+
+	// Print all Point Clouds to File
+		if(ioPos == 0)
+			fscanf(curFile, "%i\n", &curCloud);
+
+		int endPos = min(ioPos+2,curCloud);
+
+		int i, k;
+		for(k = 0; ioPos < endPos; ioPos++) {
+
+			if(ioPos+1 >= curCloud) {
+				ioPos = -1;
+				ioProcess = IO_NULL;
+				fclose(curFile);
+				curFile = NULL;
+				return true;
+			}
+
+			float perc = 1.*ioPos/curCloud;
+			string percStr = "Loading: " + to_string(100*perc) + " %";
+
+			gl->setColor(.2,.2,.2,1);
+			gl->fillRect(bX,bY,bW,bH);
+			gl->setColor(0,0,0,1);
+			gl->fillRect(bX+25,bY+100, bW-50,30);
+			gl->setColor(1,1,1,1);
+			gl->fillRect(bX+25,bY+100, perc*(bW-50),30);
+			gl->drawStringCentered(bX+bW*.5,bY+50,2,2,percStr);
+
+			int curN;
+			fscanf(curFile, "%i\n", &curN);
+
+			if(curN == -1) {
+				ioPos = -1;
+				ioProcess = IO_NULL;
+				fclose(curFile);
+				curFile = NULL;
+				return true;
+				break;
+			}
+
+			delete [] pointArray[ioPos];
+			pointArraySize[ioPos] = curN;
+			pointArray[ioPos] = new float[pointArraySize[ioPos]];
+
+			// Print Points as x y z Data
+			for(int l = 0; l < pointArraySize[ioPos]; l += 3, k++) {
+				int curI;
+				float curX, curY, curZ;
+				fscanf(curFile, "%i %f %f %f\n", &curI, &curX, &curY, &curZ);
+				pointArray[ioPos][l] = curX;
+				pointArray[ioPos][l+1] = curY;
+				pointArray[ioPos][l+2] = curZ;
+			}
+		}
+
+	return true;
+}
+
 
 int Mesh :: getCurCloud() {
 	return curCloud;
@@ -87,7 +258,7 @@ int Mesh :: getCurCloud() {
 
 void Mesh :: addPoints(float* depthBuffer, int depthBufferSize, const glm::mat4 model_mat) {
 
-	if(isDrawing || isAdding || depthBufferSize < 100)
+	if(isIOOpen() || isDrawing || isAdding || depthBufferSize < 100)
 		return;
 
 	delete [] pointArray[curCloud];
@@ -161,8 +332,11 @@ int Mesh :: getMaxCloudPoints() {
 	return maxPointNum;
 }
 
-void Mesh :: Render(glm::mat4 projection_mat, glm::mat4 view_mat) {
+void Mesh :: Render(GraphicsOGL* gl, glm::mat4 projection_mat, glm::mat4 view_mat) {
 	//isDrawing = true;
+
+	continueSaving(gl);
+	continueLoading(gl);
 
 	Renderable :: Render(projection_mat, view_mat);
 

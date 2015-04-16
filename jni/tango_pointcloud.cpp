@@ -39,18 +39,21 @@ using namespace std;
 
 
 long long totalPointNumber = 0;
+float ttt = 0;
 
 
 // CURSOR VARIABLES
 	int cursorX = 0,
 		cursorY = 0,
 		realCT = 0,
+		cursorPressed = 0,
 		cursorTouching = 0,
-		cTTimerMax = 5,
+		cTTimerMax = 10, //5
 		cTTimer = cTTimerMax;
 
 // MENU VARIABLES
 	int updatePoints = 0;
+	int saveFailed = false;
 
 
 	bool glCreated = false;
@@ -201,6 +204,7 @@ bool SetupGraphics(int w, int h) {
     LOGE("Setup graphic height not valid");
     return false;
   }
+
   cam->SetAspectRatio(static_cast<float>(w) / static_cast<float>(h));
   return true;
 }
@@ -208,7 +212,6 @@ bool SetupGraphics(int w, int h) {
 int checkCircleButton(int x, int y, int r, string str) {
 
 	int pressed;
-	float b = 5;
 	float xDis, yDis;
 	xDis = cursorX-x;
 	yDis = cursorY-y;
@@ -216,17 +219,41 @@ int checkCircleButton(int x, int y, int r, string str) {
 	pressed = (cursorTouching && sqrt(xDis*xDis + yDis*yDis) < r);
 
 
-	gl->setColor(0,0,0,1);
-	gl->drawStringScaled(x-r+b,y+r,2,2,str);
-
 	if(pressed)
 		r += 8;
 
-	gl->setColor(1,1,1,1);
-	gl->fillCircle(x,y,r-b);
-	gl->setColor(0,0,0,1);
-	gl->fillCircle(x,y,r);
+	glLineWidth(20);
 
+	gl->setColor(1,1,1,1);
+	gl->fillCircle(x,y,r);
+	gl->setColor(0,0,0,1);
+	gl->drawCircle(x,y,r);
+
+	gl->setColor(0,0,0,1);
+	gl->drawStringCentered(x,y,2,2,str);
+
+	return pressed;
+}
+
+int checkRectButton(int x, int y, int w, int h, string str) {
+
+	int pressed;
+	float b = 5;
+
+	pressed = (cursorTouching && (cursorX >= x && cursorX <= x+w && cursorY >= y && cursorY <= y+h));
+
+
+	if(pressed)
+		w += 8;
+
+	gl->setColor(0,0,0,1);
+	gl->fillRect(x,y,w,h);
+	gl->setColor(1,1,1,1);
+	gl->fillRect(x+b,y+b,w-2*b,h-2*b);
+
+
+	gl->setColor(0,0,0,1);
+	gl->drawStringCentered(x+w/2.,y+h/2.,2,2,str);
 
 	return pressed;
 }
@@ -236,7 +263,7 @@ bool RenderFrame() {
 	if(gl == NULL)
 		  gl = new GraphicsOGL();
 
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);\
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   // XYZij dirty indicates that the XYZij data has been changed.
@@ -296,6 +323,8 @@ bool RenderFrame() {
     cam_parent_transform->SetPosition(
         GlUtil::GetTranslationFromMatrix(oc_2_ow_mat_motion));
 
+    gl->setPerspective();
+
     frustum->SetTransformationMatrix(oc_2_ow_mat_motion);
     frustum->SetScale(kFrustumScale);
     frustum->Render(cam->GetProjectionMatrix(), cam->GetViewMatrix());
@@ -311,12 +340,10 @@ bool RenderFrame() {
   axis->Render(cam->GetProjectionMatrix(), cam->GetViewMatrix());
 
   // Render point cloud based on depth buffer and depth frame transformation.
-  /*for(int i = 0; i < 100; i++)
-	  pointcloud->Render(
-			  cam->GetProjectionMatrix(), cam->GetViewMatrix(), oc_2_ow_mat_depth,
-			  TangoData::GetInstance().depth_buffer_size[i] * 3,
-			  static_cast<float*>(TangoData::GetInstance().depth_buffer[i]));
-  */
+  pointcloud->Render(
+		  cam->GetProjectionMatrix(), cam->GetViewMatrix(), oc_2_ow_mat_depth,
+		  TangoData::GetInstance().depth_buffer_size * 3,
+		  static_cast<float*>(TangoData::GetInstance().depth_buffer));
 
   //Only Update if the Cloud is New!
   if(updatePoints && TangoData::GetInstance().hasNewCloud) {
@@ -325,7 +352,7 @@ bool RenderFrame() {
 	  mesh->addPoints(TangoData::GetInstance().depth_buffer, TangoData::GetInstance().depth_buffer_size*3, oc_2_ow_mat_motion);
 	  TangoData::GetInstance().hasNewCloud = false;
   }
-  mesh->Render(cam->GetProjectionMatrix(), cam->GetViewMatrix());
+  mesh->Render(gl, cam->GetProjectionMatrix(), cam->GetViewMatrix());
 
   grid->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f) - kHeightOffset);
   // Render grid.
@@ -333,6 +360,7 @@ bool RenderFrame() {
 
   gl->setColor(0,0,0,1);
   gl->setFont("8bit");
+  gl->setOrtho();
 
 
   float s = 2, dY = 0;//-150;
@@ -357,19 +385,28 @@ bool RenderFrame() {
 
 
   gl->drawStringScaled(0,0,s,s,TangoData::GetInstance().errorString);
-  __android_log_print(ANDROID_LOG_INFO, "Junk", "%s", (TangoData::GetInstance().errorString).c_str());
+
+
+  float barPerc;
+  barPerc = 1.*mesh->getCurCloud()/mesh->getPointCloudNumber();
+  gl->setColor(0,1,0,1);
+  gl->fillRect(0,0,gl->getScreenWidth()*barPerc,5);
+  gl->setColor(0,0,0,1);
+  gl->drawRect(0,0,gl->getScreenWidth(),5);
+
 
 
   gl->setColor(0,0,0,1);
-  dir += 1;
 
   if(realCT && !cursorTouching) {
-	  cursorTouching = true;
+	  cursorTouching = cursorPressed = true;
 
 	  if(cTTimer == -1)
 	  		  cTTimer = cTTimerMax;
   }
   else if(!realCT && cursorTouching) {
+	  cursorPressed = false;
+
 	  if(cTTimer > -1)
 		  cTTimer--;
 
@@ -378,17 +415,37 @@ bool RenderFrame() {
 		  realCT = false;
 	  }
   }
+  else if(realCT && cursorTouching) {
+  	  cursorPressed = false;
+  }
 
-  if(cursorTouching)
-	  gl->fillCircle(cursorX,cursorY,50);
+  float h = 120;
 
-
-  if(checkCircleButton(100,1000,80, "Hold to\nAdd Points"))
+  // Draw Add Point Button
+  if(checkRectButton(20,850,150,h, "Hold to\nAdd Points"))
 	  updatePoints = true;
   else
 	  updatePoints = false;
 
-  realCT = 0;
+  if(checkRectButton(20,700,150,h, "Save File"))
+	  if(cursorPressed) {
+		  if(!mesh->saveToFile(gl,"model.dat"))
+			  saveFailed = true;
+	  }
+
+  if(checkRectButton(220,700,150,h, "Load File"))
+ 	  if(cursorPressed) {
+ 		  if(!mesh->loadFile(gl,"model.dat"))
+ 			  saveFailed = true;
+ 	  }
+
+  if(checkRectButton(20,1000,150,h, "Clear Model"))
+	  if(cursorPressed) {
+		  mesh->clear();
+		  totalPointNumber = 0;
+	  }
+
+  realCT = cursorPressed = false;
 
   return true;
 }
@@ -515,7 +572,7 @@ JNIEXPORT void JNICALL
 Java_com_projecttango_experiments_nativepointcloud_TangoJNINative_passTouchPos(
     JNIEnv*, jobject, float x, float y) {
   cursorX = x;
-  cursorY = y;
+  cursorY = y+50;
 }
 
 JNIEXPORT void JNICALL

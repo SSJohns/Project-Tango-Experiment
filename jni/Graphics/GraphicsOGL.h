@@ -47,7 +47,9 @@ class GraphicsOGL {
 			void drawCircle(float,float,float);
 			void fillCircle(float,float,float);
 			void drawPolygon(float,float,float,int,float);
+			void drawPolygon(float,float,float,float,int,float);
 			void fillPolygon(float,float,float,int,float);
+			void fillPolygon(float,float,float,float,int,float);
 
 		//3D DRAWING
 
@@ -60,6 +62,8 @@ class GraphicsOGL {
 			float drawCharScaled(float, float, float, float, char);
 			void drawString(float, float, string);
 			void drawStringScaled(float, float, float, float, string);
+			void drawStringCentered(float, float, float, float, string);
+
 
 		//SHADERS
 			void disableShaders();
@@ -71,6 +75,9 @@ class GraphicsOGL {
 			void setFont(string);
 
 		//HEIGHTMAP
+			void transformClear();
+			void transformTranslation(float,float,float);
+			void transformRotationZ(float);
 			//Heightmap* getHeightmap();
 
 		//PROJECTION
