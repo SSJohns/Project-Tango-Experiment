@@ -525,8 +525,6 @@ void GraphicsOGL :: display() {
 
 		glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
 
 		//glOrtho(0,640,480,0,-1000,1000);
 

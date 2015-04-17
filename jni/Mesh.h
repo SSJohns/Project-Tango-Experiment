@@ -22,6 +22,7 @@ class Mesh : public Renderable {
 		~Mesh();
 		void Render(GraphicsOGL*, glm::mat4, glm::mat4);
 		void clear();
+		void setResolution(int);
 		int getPointNumber();		// Get Number of Points in Mesh
 		int getPointCloudNumber();
 		int getMaxCloudPoints();

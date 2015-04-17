@@ -19,10 +19,11 @@
 
 static const char kVertexShader[] =
     "attribute vec4 vertex;\n"
+	"uniform float pointSize;\n"
     "uniform mat4 mvp;\n"
     "varying vec4 v_color;\n"
     "void main() {\n"
-    "  gl_PointSize = 5.0;\n"
+	"  gl_PointSize = pointSize;\n"
     "  gl_Position = mvp*vertex;\n"
     "  v_color = vertex;\n"
     "}\n";

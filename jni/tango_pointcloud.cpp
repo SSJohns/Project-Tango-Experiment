@@ -39,7 +39,9 @@ using namespace std;
 
 
 long long totalPointNumber = 0;
-float ttt = 0;
+
+// SLIDER VARIABLES
+	int resolutionSlider = 1;
 
 
 // CURSOR VARIABLES
@@ -52,6 +54,7 @@ float ttt = 0;
 		cTTimer = cTTimerMax;
 
 // MENU VARIABLES
+	bool toggleAddPoints = false;
 	int updatePoints = 0;
 	int saveFailed = false;
 
@@ -243,20 +246,53 @@ int checkRectButton(int x, int y, int w, int h, string str) {
 	pressed = (cursorTouching && (cursorX >= x && cursorX <= x+w && cursorY >= y && cursorY <= y+h));
 
 
-	if(pressed)
-		w += 8;
+	if(pressed) {
+		float r = 5;
+		x -= r;
+		y -= r;
+		w += 2*r;
+		h += 2*r;
+	}
 
 	gl->setColor(0,0,0,1);
 	gl->fillRect(x,y,w,h);
-	gl->setColor(1,1,1,1);
-	gl->fillRect(x+b,y+b,w-2*b,h-2*b);
 
+	if(!pressed) {
+		gl->setColor(1,1,1,1);
+		gl->fillRect(x+b,y+b,w-2*b,h-2*b);
+	}
 
 	gl->setColor(0,0,0,1);
 	gl->drawStringCentered(x+w/2.,y+h/2.,2,2,str);
 
 	return pressed;
 }
+
+float checkSlider(int x, int y, int w, int h, float curPerc) {
+
+	int pressed;
+	float r = h*.25;
+	float prX, newPerc;
+
+	pressed = (cursorTouching && (cursorX >= x && cursorX <= x+w && cursorY >= y && cursorY <= y+h));
+
+
+	if(pressed)
+		newPerc = max(0.,min(1.*(cursorX-x)/w,1.));
+
+	prX = x + curPerc*w;
+
+	gl->setColor(0,0,0,1);
+	gl->fillRect(x,y+r,w,h-2*r);
+
+	gl->fillRect(prX-3,y,6,h);
+
+	if(!pressed)
+		return -1;
+	else
+		return newPerc;
+}
+
 
 // GL render loop.
 bool RenderFrame() {
@@ -340,23 +376,24 @@ bool RenderFrame() {
   axis->Render(cam->GetProjectionMatrix(), cam->GetViewMatrix());
 
   // Render point cloud based on depth buffer and depth frame transformation.
-  pointcloud->Render(
-		  cam->GetProjectionMatrix(), cam->GetViewMatrix(), oc_2_ow_mat_depth,
-		  TangoData::GetInstance().depth_buffer_size * 3,
-		  static_cast<float*>(TangoData::GetInstance().depth_buffer));
+  if(!mesh->isIOOpen())
+	  pointcloud->Render(
+			  cam->GetProjectionMatrix(), cam->GetViewMatrix(), oc_2_ow_mat_depth,
+			  TangoData::GetInstance().depth_buffer_size * 3,
+			  static_cast<float*>(TangoData::GetInstance().depth_buffer), resolutionSlider);
 
   //Only Update if the Cloud is New!
-  if(updatePoints && TangoData::GetInstance().hasNewCloud) {
+  if(((!toggleAddPoints && updatePoints) || (toggleAddPoints && !updatePoints)) && TangoData::GetInstance().hasNewCloud) {
 	  totalPointNumber += TangoData::GetInstance().depth_buffer_size;
 
 	  mesh->addPoints(TangoData::GetInstance().depth_buffer, TangoData::GetInstance().depth_buffer_size*3, oc_2_ow_mat_motion);
 	  TangoData::GetInstance().hasNewCloud = false;
   }
-  mesh->Render(gl, cam->GetProjectionMatrix(), cam->GetViewMatrix());
-
   grid->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f) - kHeightOffset);
   // Render grid.
   grid->Render(cam->GetProjectionMatrix(), cam->GetViewMatrix());
+
+  mesh->Render(gl, cam->GetProjectionMatrix(), cam->GetViewMatrix());
 
   gl->setColor(0,0,0,1);
   gl->setFont("8bit");
@@ -419,31 +456,76 @@ bool RenderFrame() {
   	  cursorPressed = false;
   }
 
-  float h = 120;
+  float lX1 = 20, lX2 = lX1+200, rX1 = 1500, w = 180, h = 90;
+  float bYS = 110, bY3 = 1095, bY2 = bY3-bYS, bY1 = bY2-bYS;
 
-  // Draw Add Point Button
-  if(checkRectButton(20,850,150,h, "Hold to\nAdd Points"))
-	  updatePoints = true;
+
+  string resTxt;
+  if(resolutionSlider == 1)
+	  resTxt = "Using every available point.";
+  else if(resolutionSlider == 2)
+	  resTxt = "Using every 2nd available point.";
+  else if(resolutionSlider == 3)
+	  resTxt = "Using every 3rd available point.";
   else
-	  updatePoints = false;
+	  resTxt = "Using every " + to_string(resolutionSlider) + "th available point.";
 
-  if(checkRectButton(20,700,150,h, "Save File"))
+  gl->drawStringScaled(lX2+w+20,bY3-30,2,2,resTxt);
+
+  int maxRes = 30;
+  float slVal = checkSlider(lX2+w+20,bY3,1000,h,1.*(resolutionSlider-1)/(maxRes-1));
+  if(slVal != -1) {
+	  resolutionSlider = round(slVal*(maxRes-1)) + 1;
+
+	  resolutionSlider = max(1, min(resolutionSlider, maxRes));
+
+	  mesh->setResolution(resolutionSlider);
+  }
+
+  if(checkRectButton(lX1,bY1,w,h, "Save File"))
 	  if(cursorPressed) {
 		  if(!mesh->saveToFile(gl,"model.dat"))
 			  saveFailed = true;
 	  }
 
-  if(checkRectButton(220,700,150,h, "Load File"))
+  if(checkRectButton(lX2,bY1,w,h, "Load File"))
  	  if(cursorPressed) {
  		  if(!mesh->loadFile(gl,"model.dat"))
  			  saveFailed = true;
  	  }
 
-  if(checkRectButton(20,1000,150,h, "Clear Model"))
+  // Draw Add Point Button
+  if(!toggleAddPoints) {
+	  if(checkRectButton(lX1,bY2,w,h, "Hold to\nAdd Points"))
+		  updatePoints = true;
+	  else
+		  updatePoints = false;
+  }
+  else {
+	  if(checkRectButton(lX1,bY2,w,h, "Hold to\nStop Adding"))
+		  updatePoints = true;
+	  else
+		  updatePoints = false;
+  }
+
+  if(checkRectButton(lX2,bY2,w,h, "Toggle Adding\nPoints"))
+	  if(cursorPressed)
+		  toggleAddPoints = !toggleAddPoints;
+
+
+  if(checkRectButton(lX1,bY3,w,h, "Clear Model"))
 	  if(cursorPressed) {
 		  mesh->clear();
 		  totalPointNumber = 0;
 	  }
+
+
+  // RIGHT BUTTONS
+
+  if(checkRectButton(rX1,bY3,w,h, "Reset Camera"))
+  	  if(cursorPressed)
+  		  cam->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
 
   realCT = cursorPressed = false;
 

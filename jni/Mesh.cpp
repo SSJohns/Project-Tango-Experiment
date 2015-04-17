@@ -40,7 +40,7 @@ Mesh :: Mesh(int maxPoints) : Renderable() {
 
 	curCloud = 0;
 	numClouds = 1000;
-	resScale = 1;//00;
+	resScale = 5;//00;
 
 	ioPos = -1;
 	ioProcess = IO_NULL;
@@ -76,6 +76,10 @@ void Mesh :: clear() {
 		// Create New Array for Current Cloud
 		pointArray[i] = new float[0];
 	}
+}
+
+void Mesh :: setResolution(int newRes) {
+	resScale = newRes;
 }
 
 bool Mesh :: isIOOpen() {
@@ -138,16 +142,26 @@ int Mesh :: continueSaving(GraphicsOGL* gl) {
 				return true;
 			}
 
-			float perc = 1.*ioPos/curCloud;
-			string percStr = to_string(100*perc) + " %";
+			if(ioPos+1 == endPos) {
+				float perc = 1.*ioPos/curCloud;
+				string percStr = "Saving " + to_string(100*perc) + " %";
+				string progStr = "Cloud " + to_string(ioPos) + " / " + to_string(curCloud);
+				string workStr = "";
+					workStr += "Point Number: " + to_string(pointArraySize[ioPos]/3) + "\n";
+					workStr += "Memory Size: " + to_string(1.*pointArraySize[ioPos]*4/(1024*1024)) + "MB \n";
 
-			gl->setColor(.2,.2,.2,1);
-			gl->fillRect(bX,bY,bW,bH);
-			gl->setColor(0,0,0,1);
-			gl->fillRect(bX+25,bY+100, bW-50,30);
-			gl->setColor(1,1,1,1);
-			gl->fillRect(bX+25,bY+100, perc*(bW-50),30);
-			gl->drawStringCentered(bX+bW*.5,bY+50,2,2,percStr);
+				gl->setColor(.2,.2,.2,.85);
+				gl->fillRect(bX,bY,bW,bH);
+				gl->setColor(1,1,1,1);
+				gl->drawRect(bX,bY,bW,bH);
+				gl->setColor(0,0,0,1);
+				gl->fillRect(bX+25,bY+100, bW-50,30);
+				gl->setColor(1,1,1,1);
+				gl->fillRect(bX+25,bY+100, perc*(bW-50),30);
+				gl->drawStringCentered(bX+bW*.5,bY+50,2,2,percStr);
+				gl->drawStringCentered(bX+bW*.5,bY+150,1.5,1.5,progStr);
+				gl->drawStringScaled(bX+40,bY+200,1.4,1.4,workStr);
+			}
 
 			fprintf(curFile, "%i\n", pointArraySize[ioPos]);
 
@@ -210,16 +224,18 @@ int Mesh :: continueLoading(GraphicsOGL* gl) {
 				return true;
 			}
 
-			float perc = 1.*ioPos/curCloud;
-			string percStr = "Loading: " + to_string(100*perc) + " %";
+			if(ioPos+1 == endPos) {
+				float perc = 1.*ioPos/curCloud;
+				string percStr = "Loading: " + to_string(100*perc) + " %";
 
-			gl->setColor(.2,.2,.2,1);
-			gl->fillRect(bX,bY,bW,bH);
-			gl->setColor(0,0,0,1);
-			gl->fillRect(bX+25,bY+100, bW-50,30);
-			gl->setColor(1,1,1,1);
-			gl->fillRect(bX+25,bY+100, perc*(bW-50),30);
-			gl->drawStringCentered(bX+bW*.5,bY+50,2,2,percStr);
+				gl->setColor(.2,.2,.2,.85);
+				gl->fillRect(bX,bY,bW,bH);
+				gl->setColor(0,0,0,1);
+				gl->fillRect(bX+25,bY+100, bW-50,30);
+				gl->setColor(1,1,1,1);
+				gl->fillRect(bX+25,bY+100, perc*(bW-50),30);
+				gl->drawStringCentered(bX+bW*.5,bY+50,2,2,percStr);
+			}
 
 			int curN;
 			fscanf(curFile, "%i\n", &curN);
@@ -272,8 +288,8 @@ void Mesh :: addPoints(float* depthBuffer, int depthBufferSize, const glm::mat4 
 	if(resScale == 1)
 		pointArraySize[curCloud] = depthBufferSize;
 	else
-		for(int i = 0; i < depthBufferSize; i += resScale)
-			pointArraySize[curCloud]++;
+		for(int i = 0; i < depthBufferSize; i += 3*resScale)
+			pointArraySize[curCloud] += 3;
 
 
 	// Get Model Matrix
@@ -287,7 +303,7 @@ void Mesh :: addPoints(float* depthBuffer, int depthBufferSize, const glm::mat4 
 
 	// Add Points to Cloud
 	int k = 0;
-	for(int i = 0; i < pointArraySize[curCloud]; i += 3*resScale) {
+	for(int i = 0; i < depthBufferSize; i += 3*resScale) {
 
 		// Get Point Vector
 		curVec = glm::vec4(depthBuffer[i],depthBuffer[i+1],depthBuffer[i+2],1);
@@ -335,25 +351,29 @@ int Mesh :: getMaxCloudPoints() {
 void Mesh :: Render(GraphicsOGL* gl, glm::mat4 projection_mat, glm::mat4 view_mat) {
 	//isDrawing = true;
 
-	continueSaving(gl);
-	continueLoading(gl);
-
 	Renderable :: Render(projection_mat, view_mat);
 
 	// Calculate model view projection matrix.
 	glm::mat4 mvp_mat = projection_mat * view_mat;
 
+
 	glUseProgram(shader_program_);
 
+	GLint ptSize = glGetUniformLocation(shader_program_, "pointSize");
 
 	// Lock xyz_ij mutex.
 	pthread_mutex_lock(&TangoData::GetInstance().xyzij_mutex);
 
 
-	for(int i = 0; i < numClouds; i++) {
+	for(int i = 0; i < curCloud; i++) {
 
 		if(pointArraySize[i] == 0)
 			continue;
+
+		if(ioPos != -1 && abs(i - ioPos) < 2)
+			glUniform1f(ptSize, 2.);
+		else
+			glUniform1f(ptSize, 4.);
 
 		glUniformMatrix4fv(uniform_mvp_mat_, 1, GL_FALSE, glm::value_ptr(mvp_mat));
 
@@ -374,5 +394,9 @@ void Mesh :: Render(GraphicsOGL* gl, glm::mat4 projection_mat, glm::mat4 view_ma
 	GlUtil::CheckGlError("glDrawArray()");
 	glUseProgram(0);
 	GlUtil::CheckGlError("glUseProgram()");
+
+
+	continueSaving(gl);
+	continueLoading(gl);
 	//isDrawing = false;
 }

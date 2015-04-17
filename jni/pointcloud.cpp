@@ -49,7 +49,29 @@ Pointcloud::Pointcloud() {
 
 void Pointcloud::Render(glm::mat4 projection_mat, glm::mat4 view_mat,
                         glm::mat4 model_mat, int depth_buffer_size,
-                        float *depth_data_buffer) {
+                        float *depth_data_buffer, int resScale) {
+
+	int newBufferSize = 0;
+	if(resScale == 1)
+		newBufferSize = depth_buffer_size;
+	else for(int i = 0; i < depth_buffer_size; i += 3*resScale)
+		newBufferSize += 3;
+
+	// Create New Array for Current Cloud
+	float newBuffer[newBufferSize];
+
+	// Add Points to Cloud
+	int k = 0;
+	for(int i = 0; i < depth_buffer_size; i += 3*resScale) {
+
+		newBuffer[k] = depth_data_buffer[i];
+		newBuffer[k+1] = depth_data_buffer[i+1];
+		newBuffer[k+2] = depth_data_buffer[i+2];
+
+		// Increment to Next Point Position
+		k += 3;
+	}
+
   glUseProgram(shader_program_);
 
   // Lock xyz_ij mutex.
@@ -61,13 +83,13 @@ void Pointcloud::Render(glm::mat4 projection_mat, glm::mat4 view_mat,
 
   // Bind vertex buffer.
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers_);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * depth_buffer_size,
-               depth_data_buffer, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * newBufferSize,
+		  newBuffer, GL_STATIC_DRAW);
   glEnableVertexAttribArray(attrib_vertices_);
   glVertexAttribPointer(attrib_vertices_, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  glDrawArrays(GL_POINTS, 0, 3 * depth_buffer_size);
+  glDrawArrays(GL_POINTS, 0, 3*newBufferSize);
 
   // Unlock xyz_ij mutex.
   pthread_mutex_unlock(&TangoData::GetInstance().xyzij_mutex);
